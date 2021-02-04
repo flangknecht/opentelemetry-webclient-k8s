@@ -1,4 +1,4 @@
-package com.unitedinternet.mam.tracing;
+package com.example.tracing;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

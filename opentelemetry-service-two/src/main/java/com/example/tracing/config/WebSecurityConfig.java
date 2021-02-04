@@ -1,4 +1,4 @@
-package com.unitedinternet.mam.tracing.config;
+package com.example.tracing.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

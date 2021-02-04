@@ -1,4 +1,4 @@
-package com.unitedinternet.mam.tracing.resource;
+package com.example.tracing.resource;
 
 import java.util.Map;
 import java.util.stream.Collectors;
