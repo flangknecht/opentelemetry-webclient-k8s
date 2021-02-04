@@ -112,9 +112,16 @@
                                     <entryPoint>
                                         <exec>
                                             <arg>java</arg>
+                                            <arg>-Dnetworkaddress.cache.ttl=10</arg>
+                                            <arg>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:1044</arg>
+                                            <arg>-Djava.awt.headless=true</arg>
+                                            <arg>-Djava.security.egd=file:/dev/./urandom</arg>
+                                            <arg>-Djava.io.tmpdir=/tmp</arg>
+                                            <arg>-Dnetworkaddress.cache.ttl=120</arg>
+                                            <arg>-XX:+UseContainerSupport</arg>
+                                            <arg>-javaagent:/srv/javaagent-15.jar</arg>
                                             <arg>-jar</arg>
                                             <arg>/srv/app</arg>
-                                            <arg>-Dnetworkaddress.cache.ttl=10 -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:1044 -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -Djava.io.tmpdir=/tmp -Dnetworkaddress.cache.ttl=120 -XX:+UseContainerSupport -javaagent:/srv/javaagent-15.jar</arg>
                                         </exec>
                                     </entryPoint>
                                 </build>
