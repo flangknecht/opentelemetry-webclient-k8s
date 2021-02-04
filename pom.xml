@@ -89,7 +89,15 @@
                                                         ${maven.multiModuleProjectDirectory}/opentelemetry-javaagent-all-0.14.0.jar
                                                     </source>
                                                     <outputDirectory>srv</outputDirectory>
-                                                    <destName>javaagent.jar</destName>
+                                                    <destName>javaagent-14.jar</destName>
+                                                    <fileMode>0555</fileMode>
+                                                </file>
+                                                <file>
+                                                    <source>
+                                                        ${maven.multiModuleProjectDirectory}/opentelemetry-javaagent-all-0.15.0.jar
+                                                    </source>
+                                                    <outputDirectory>srv</outputDirectory>
+                                                    <destName>javaagent-15.jar</destName>
                                                     <fileMode>0555</fileMode>
                                                 </file>
                                                 <file>
@@ -106,7 +114,7 @@
                                             <arg>java</arg>
                                             <arg>-jar</arg>
                                             <arg>/srv/app</arg>
-                                            <arg>-Dnetworkaddress.cache.ttl=10 -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:1044 -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -Djava.io.tmpdir=/tmp -Dnetworkaddress.cache.ttl=120 -XX:+UseContainerSupport -javaagent:/srv/javaagent.jar</arg>
+                                            <arg>-Dnetworkaddress.cache.ttl=10 -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:1044 -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -Djava.io.tmpdir=/tmp -Dnetworkaddress.cache.ttl=120 -XX:+UseContainerSupport -javaagent:/srv/javaagent-15.jar</arg>
                                         </exec>
                                     </entryPoint>
                                 </build>
