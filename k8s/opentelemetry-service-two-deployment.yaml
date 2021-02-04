@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: opentelemetry-service-two
+  name: opentelemetry-service-two
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: opentelemetry-service-two
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: opentelemetry-service-two
+    spec:
+      containers:
+        - env:
+            - name: OTEL_EXPORTER_JAEGER_ENDPOINT
+              value: jaeger:14250
+            - name: OTEL_EXPORTER
+              value: jaeger
+            - name: OTEL_PROPAGATORS
+              value: b3multi
+          image: flangknecht/opentelemetry-service-two:latest
+          name: opentelemetry-service-two
+          resources: {}
+      hostname: opentelemetry-service-two
+      restartPolicy: Always
+status: {}

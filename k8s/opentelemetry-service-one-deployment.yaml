@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: opentelemetry-service-one
+  name: opentelemetry-service-one
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: opentelemetry-service-one
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: opentelemetry-service-one
+    spec:
+      containers:
+        - env:
+            - name: JAVA_OPTS
+              value: -Dnetworkaddress.cache.ttl=10 -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:1044
+            - name: OTEL_EXPORTER_JAEGER_ENDPOINT
+              value: jaeger:14250
+            - name: OTEL_EXPORTER
+              value: jaeger
+            - name: OTEL_PROPAGATORS
+              value: b3multi
+            - name: SERVICE_TWO_URI
+              value: http://opentelemetry-service-two:8080
+          image: flangknecht/opentelemetry-service-one:latest
+          name: opentelemetry-service-one
+          ports:
+            - containerPort: 8080
+            - containerPort: 1044
+          resources: {}
+      hostname: opentelemetry-service-one
+      restartPolicy: Always
+status: {}
