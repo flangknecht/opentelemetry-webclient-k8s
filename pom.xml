@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.4.2</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>com.example</groupId>
+    <artifactId>otel-services</artifactId>
+    <name>otel-services</name>
+    <description>Evaluation project to showcase broken traces on kubernetes</description>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>opentelemetry-service-one</module>
+        <module>opentelemetry-service-two</module>
+    </modules>
+
+    <scm>
+        <connection>scm:git:https://github.com/flangknecht/opentelemetry-webclient-k8s.git</connection>
+        <developerConnection>scm:git:https://github.com/flangknecht/opentelemetry-webclient-k8s.git</developerConnection>
+        <url>https://github.com/flangknecht/opentelemetry-webclient-k8s.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <properties>
+        <java.version>11</java.version>
+
+        <docker-maven-plugin.version>0.34.1</docker-maven-plugin.version>
+        <docker-maven-plugin.from>adoptopenjdk/openjdk11:jdk-11.0.4_11-alpine</docker-maven-plugin.from>
+        <docker-maven-plugin.name>flangknecht/%a</docker-maven-plugin.name>
+    </properties>
+
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>io.fabric8</groupId>
+                    <artifactId>docker-maven-plugin</artifactId>
+                    <version>${docker-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>docker-build</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>build</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <imagePullPolicy>Always</imagePullPolicy>
+                        <images>
+                            <image>
+                                <name>${docker-maven-plugin.name}</name>
+                                <build>
+                                    <from>${docker-maven-plugin.from}</from>
+                                    <tags>
+                                        <tag>${project.version}</tag>
+                                        <tag>latest</tag>
+                                    </tags>
+                                    <env>
+                                        <OTEL_EXPORTER_JAEGER_SERVICE_NAME>${project.name}</OTEL_EXPORTER_JAEGER_SERVICE_NAME>
+                                        <OTEL_RESOURCE_ATTRIBUTES>
+                                            service.namespace=myteam,service.name=${project.name},service.version=${project.version}
+                                        </OTEL_RESOURCE_ATTRIBUTES>
+                                    </env>
+                                    <labels>
+                                        <org.opencontainers.image.title>${project.name}</org.opencontainers.image.title>
+                                        <org.opencontainers.image.description>${project.description}
+                                        </org.opencontainers.image.description>
+                                        <org.opencontainers.image.url>${project.url}</org.opencontainers.image.url>
+                                        <org.opencontainers.image.source>${project.scm.url}</org.opencontainers.image.source>
+                                        <org.opencontainers.image.version>${project.version}</org.opencontainers.image.version>
+                                    </labels>
+                                    <assembly>
+                                        <mode>dir</mode>
+                                        <targetDir>/</targetDir>
+                                        <inline>
+                                            <files>
+                                                <file>
+                                                    <source>
+                                                        ${maven.multiModuleProjectDirectory}/opentelemetry-javaagent-all-0.14.0.jar
+                                                    </source>
+                                                    <outputDirectory>srv</outputDirectory>
+                                                    <destName>javaagent.jar</destName>
+                                                    <fileMode>0555</fileMode>
+                                                </file>
+                                                <file>
+                                                    <source>${project.build.directory}/${project.build.finalName}.jar</source>
+                                                    <outputDirectory>srv</outputDirectory>
+                                                    <destName>app</destName>
+                                                    <fileMode>0555</fileMode>
+                                                </file>
+                                            </files>
+                                        </inline>
+                                    </assembly>
+                                    <entryPoint>
+                                        <exec>
+                                            <arg>java</arg>
+                                            <arg>-jar</arg>
+                                            <arg>/srv/app</arg>
+                                            <arg>-Dnetworkaddress.cache.ttl=10 -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:1044 -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -Djava.io.tmpdir=/tmp -Dnetworkaddress.cache.ttl=120 -XX:+UseContainerSupport -javaagent:/srv/javaagent.jar</arg>
+                                        </exec>
+                                    </entryPoint>
+                                </build>
+                            </image>
+                        </images>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

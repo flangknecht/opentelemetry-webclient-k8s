@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    group:
+      default: stage-workstation, brand-any
+  application:
+    name: opentelemetry-service-two
+    version: 1.0.0
+management:
+  metrics:
+    distribution:
+      slo:
+        http.server.requests: 1ms, 3200us, 10ms, 32ms, 100ms, 320ms, 1s, 3200ms

@@ -1,0 +1,52 @@
+# Custom configuration values for helm chart templates. You could define values like internal application
+# port, protocol, etc. or request and limit resources used by container like CPU and memory consumption here.
+# For details see - https://git.mamdev.server.lan/acdc/helm-charts/tree/master/spring-boot.
+
+service:
+  internalPort: 8080 # Application internal port, commonly 8080 or 8443
+
+global:
+  app:
+    urlScheme: HTTP    # Communication protocol, either HTTP or HTTPS
+    maxMemory: 512m    # Maximum java heap size (-Xmx option)
+
+# The choice of GC type is based on the processor count and amount of available memory. The parallel GC is used
+# if 2 or more processors and 1792MB or more of RAM assigned to the container, otherwise is the serial one in use.
+# If you prefer to activate a different GC - use global.app.customJavaOpts parameter.
+# Always set both limits and requests, else the limits will be assigned to requests too.
+resources:
+  limits:
+    cpu: 2000m       # CPU limit for the container (in millicores)
+    memory: 2048Mi   # Memory limit for the container (Gi, Mi, etc.)
+  requests:
+    cpu: 500m        # CPU requested for the container (in millicores)
+    memory: 1024Mi   # Memory requested for the container (Gi, Mi, etc.)
+
+probes:
+  liveness:
+    path: /-system/liveness
+  readiness:
+    path: /-system/readiness
+
+# Application specific alerting rules which be automatically propagated to Prometheus during application
+# deployment. If you use Prometheus templating for the annotations and labels of alerts, like ".ExternalLabels.k8s_cluster"
+# in example below, you should escape whose variables, so that they are not be replaced by ansible,
+# see also https://jinja.palletsprojects.com/en/2.10.x/templates/#escaping for escaping details.
+#
+# Using raw/endraw in Jinja2 will not work as you expect because templates in Ansible are recursively evaluated.
+# https://docs.ansible.com/ansible/latest/modules/template_module.html
+# prometheusRules:
+#   content:
+#   - name: '{{ artifact_id }}-{{ stage }}-alerting-rules'
+#     rules:
+#     - alert: 'Service {{ release_name }} missing'
+#       expr: 'absent(kube_service_info{service="{{ release_name }}"}'
+#       for: 5m
+#       labels:
+#         instance: '{{ artifact_id }} {{ '{{' }} .ExternalLabels.k8s_cluster {{ '}}' }} {{ '{{' }} .Labels.service {{ '}}' }}'
+#         severity_id: "5"
+#         source: '{{ release_name }} service {{ '{{' }} .ExternalLabels.k8s_cluster {{ '}}' }}'
+#       annotations:
+#         summary: 'Kubernetes service {{ release_name }} is missing'
+#         description: 'Kubernetes service missing for {{ release_name }} on {{ '{{' }} .ExternalLabels.k8s_cluster {{ '}}' }}. A possible reason for this condition is that someone accidentally remove a service wich should be present.'
+#         dashboard_url: 'http://example.com/dashboard'
