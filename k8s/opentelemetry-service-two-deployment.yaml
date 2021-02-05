@@ -27,7 +27,11 @@ spec:
         - env:
             - name: OTEL_EXPORTER_JAEGER_ENDPOINT
               value: jaeger:14250
-            - name: OTEL_EXPORTER
+            - name: OTEL_METRICS_EXPORTER
+              value: none
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: service.namespace=myteam,service.name=opentelemetry-service-two,service.version=latest,service.instance.id=p3
+            - name: OTEL_TRACE_EXPORTER
               value: jaeger
             - name: OTEL_PROPAGATORS
               value: b3multi

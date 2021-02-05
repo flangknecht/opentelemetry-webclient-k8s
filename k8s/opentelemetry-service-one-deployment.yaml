@@ -29,7 +29,11 @@ spec:
               value: -Dnetworkaddress.cache.ttl=10 -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:1044
             - name: OTEL_EXPORTER_JAEGER_ENDPOINT
               value: jaeger:14250
-            - name: OTEL_EXPORTER
+            - name: OTEL_METRICS_EXPORTER
+              value: none
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: service.namespace=myteam,service.name=opentelemetry-service-one,service.version=latest,service.instance.id=p1
+            - name: OTEL_TRACE_EXPORTER
               value: jaeger
             - name: OTEL_PROPAGATORS
               value: b3multi
