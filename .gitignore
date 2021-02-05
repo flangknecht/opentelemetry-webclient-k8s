@@ -1,4 +1,3 @@
-#NO_YP2_ENTRY_NEEDED
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
