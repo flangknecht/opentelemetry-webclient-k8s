@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+
+  opentelemetry-service-one:
+    image: flangknecht/opentelemetry-service-one:latest
+    hostname: opentelemetry-service-one
+    ports:
+      - 8080:8080
+      - 1044:1044
+    network_mode: bridge
+    links:
+      - opentelemetry-service-two:opentelemetry-service-two
+      - jaeger:jaeger
+    environment:
+      SERVICE_TWO_URI: http://opentelemetry-service-two:8080
+      OTEL_METRICS_EXPORTER: none
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=myteam,service.name=opentelemetry-service-one,service.version=latest,service.instance.id=p1
+      OTEL_TRACE_EXPORTER: jaeger
+      OTEL_PROPAGATORS: b3multi
+      OTEL_EXPORTER_JAEGER_ENDPOINT: "jaeger:14250"
+
+  opentelemetry-service-two:
+    image: flangknecht/opentelemetry-service-two:latest
+    hostname: opentelemetry-service-two
+    network_mode: bridge
+    links:
+      - jaeger:jaeger
+    environment:
+      OTEL_TRACE_EXPORTER: jaeger
+      OTEL_PROPAGATORS: b3multi
+      OTEL_EXPORTER_JAEGER_ENDPOINT: "jaeger:14250"
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=myteam,service.name=opentelemetry-service-two,service.version=latest,service.instance.id=p3
+      OTEL_METRICS_EXPORTER: none
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    hostname: jaeger
+    ports:
+      - 16686:16686
+    network_mode: bridge
