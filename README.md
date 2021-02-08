@@ -6,14 +6,14 @@ In this setup service 1 makes an HTTP request to service 2 using Spring's WebCli
 So far, I could only reproduce this issue when the applications were deployed to kubernetes.
 I've tried it on 3 different kubernetes instances.
 - k3s:
-  - kernel: Linux debtest 5.4.0-65-generic #73-Ubuntu SMP Mon Jan 18 17:25:17 UTC 2021 x86_64 GNU/Linux
-  - k8s server version: v1.20.0+k3s2 (Server Version: version.Info{Major:"1", Minor:"20", GitVersion:"v1.20.2", GitCommit:"faecb196815e248d3ecfb03c680a4507229c2a56", GitTreeState:"clean", BuildDate:"2021-01-13T13:20:00Z", GoVersion:"go1.15.5", Compiler:"gc", Platform:"linux/amd64"})
+  - kernel: `Linux debtest 5.4.0-65-generic #73-Ubuntu SMP Mon Jan 18 17:25:17 UTC 2021 x86_64 GNU/Linux`
+  - k8s server version: `v1.20.0+k3s2 (Server Version: version.Info{Major:"1", Minor:"20", GitVersion:"v1.20.2", GitCommit:"faecb196815e248d3ecfb03c680a4507229c2a56", GitTreeState:"clean", BuildDate:"2021-01-13T13:20:00Z", GoVersion:"go1.15.5", Compiler:"gc", Platform:"linux/amd64"})`
 - Minikube on MacOS:
-  - kernel: Linux debtest 4.19.121-linuxkit #1 SMP Tue Dec 1 17:50:32 UTC 2020 x86_64 GNU/Linux
-  - k8s server version: v1.20.0+k3s2 (Server Version: version.Info{Major:"1", Minor:"20", GitVersion:"v1.20.2", GitCommit:"faecb196815e248d3ecfb03c680a4507229c2a56", GitTreeState:"clean", BuildDate:"2021-01-13T13:20:00Z", GoVersion:"go1.15.5", Compiler:"gc", Platform:"linux/amd64"})
+  - kernel: `Linux debtest 4.19.121-linuxkit #1 SMP Tue Dec 1 17:50:32 UTC 2020 x86_64 GNU/Linux`
+  - k8s server version: `v1.20.0+k3s2 (Server Version: version.Info{Major:"1", Minor:"20", GitVersion:"v1.20.2", GitCommit:"faecb196815e248d3ecfb03c680a4507229c2a56", GitTreeState:"clean", BuildDate:"2021-01-13T13:20:00Z", GoVersion:"go1.15.5", Compiler:"gc", Platform:"linux/amd64"})`
 - custom kubernetes installation
-  - kernel: Linux 5.4.87-flatcar #1 SMP Fri Jan 8 19:54:07 -00 2021 x86_64 x86_64 x86_64 GNU/Linux
-  - k8s server version:  v1.18.14 (Server Version: version.Info{Major:"1", Minor:"18", GitVersion:"v1.18.14", GitCommit:"89182bdd065fbcaffefec691908a739d161efc03", GitTreeState:"clean", BuildDate:"2020-12-18T12:02:35Z", GoVersion:"go1.13.15", Compiler:"gc", Platform:"linux/amd64"})
+  - kernel: `Linux 5.4.87-flatcar #1 SMP Fri Jan 8 19:54:07 -00 2021 x86_64 x86_64 x86_64 GNU/Linux`
+  - k8s server version: `v1.18.14 (Server Version: version.Info{Major:"1", Minor:"18", GitVersion:"v1.18.14", GitCommit:"89182bdd065fbcaffefec691908a739d161efc03", GitTreeState:"clean", BuildDate:"2020-12-18T12:02:35Z", GoVersion:"go1.13.15", Compiler:"gc", Platform:"linux/amd64"})`
 
 I encountered the same symptoms on all 3 platforms.
 Oddly enough, a docker-compose setup didn't show this issue.
