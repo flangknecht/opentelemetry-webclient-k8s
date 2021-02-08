@@ -23,7 +23,7 @@ Oddly enough, a docker-compose setup didn't show this issue.
 | ------------------------------------------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------- |
 | empty, but non-null parent context                            | empty, but non-null parent context                                      | properly populated parent context                                     |
 | ![](screenshots/broken-trace/k3s/k3s-debug-parentcontext.png) | ![](screenshots/broken-trace/minikube/minikube-debug-parentcontext.png) | ![](screenshots/broken-trace/compose/compose-debug-parentcontext.png) |
-| ![](screenshots/broken-trace/k3s/k3s-first-trace.png)         | ![](screenshots/broken-trace/minikube/minikube-trace.png)               | ![](screenshots/broken-trace/compose/compose-proper-trace.png)        |
+| ![](screenshots/broken-trace/k3s/k3s-first-trace.png)         | ![](screenshots/broken-trace/minikube/minikube-trace.png)               | ![](screenshots/broken-trace/compose/compose-first-trace.png) |
 
 ## Steps to reproduce
 
