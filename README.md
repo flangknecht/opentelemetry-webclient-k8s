@@ -24,17 +24,22 @@ Oddly enough, a docker-compose setup didn't show this issue.
 | ------------------------------------------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------- |
 | empty, but non-null parent context                            | empty, but non-null parent context                                      | properly populated parent context                                     |
 | ![](screenshots/broken-trace/k3s/k3s-debug-parentcontext.png) | ![](screenshots/broken-trace/minikube/minikube-debug-parentcontext.png) | ![](screenshots/broken-trace/compose/compose-debug-parentcontext.png) |
-| ![](screenshots/broken-trace/k3s/k3s-first-trace.png)         | ![](screenshots/broken-trace/minikube/minikube-trace.png)               | ![](screenshots/broken-trace/compose/compose-first-trace.png) |
+| ![](screenshots/broken-trace/k3s/k3s-first-trace.png)         | ![](screenshots/broken-trace/minikube/minikube-trace.png)               | ![](screenshots/broken-trace/compose/compose-first-trace.png)         |
 
 ## Steps to reproduce
 
-1. Deploy to Kubernetes
-2. Call web service 1 (HTTP GET /)
-  - Check jaeger-ui for traces for service 1 and see broken trace
-3. Make another call to web service 1 within a short period of time
+1. Clone repo and cd into local copy
+2. Deploy to Kubernetes (`kubectl apply -f k8s`) and create appropriate port forwards to your workstation
+   1. `kubectl port-forward jaeger-... 16686`
+   2. `kubectl port-forward opentelemetry-service-one-... 8080 1044`
+      1. 8080: web server port
+      2. 1044 java
+3. Call web service 1 (HTTP GET localhost:8080/)
+    - Check jaeger-ui for traces for service 1 and see broken trace
+4. Make another call to web service 1 within a short period of time (roughly less than 2 minutes)
   - Check jaeger-ui again, see new (correct) trace with 5 spans instead of the three spans seen before
 
-Netty seems to also create a new channel every 100 requests. Broken traces can then also be encountered.
+Netty seems to create a new channel every 100 requests and after some time has passed. Broken traces can then also be encountered.
 
 ```
 [opentelemetry.auto.trace 2021-02-02 12:45:36:047 +0000] [http-nio-8080-exec-2] DEBUG io.opentelemetry.javaagent.instrumentation.api.concurrent.RunnableWrapper - Wrapping runnable task reactor.netty.transport.TransportConnector$MonoChannelPromise$$Lambda$1167/0x0000000800a14040@7af407fd
@@ -45,4 +50,3 @@ Netty seems to also create a new channel every 100 requests. Broken traces can t
 Replacing WebClient with RestTemplate fixes this issue and the service produces proper spans from the get-go.
 
 After some debugging the javaagent-instrumentation, I've found that for affected requests the [parentContext](https://github.com/open-telemetry/opentelemetry-java-instrumentation/blob/main/instrumentation/netty/netty-4.1/javaagent/src/main/java/io/opentelemetry/javaagent/instrumentation/netty/v4_1/client/HttpClientRequestTracingHandler.java#L28) that's read from a freshly instrumented channel is not null as the [HttpClientRequestTracingHandler](https://github.com/open-telemetry/opentelemetry-java-instrumentation/blob/main/instrumentation/netty/netty-4.1/javaagent/src/main/java/io/opentelemetry/javaagent/instrumentation/netty/v4_1/client/HttpClientRequestTracingHandler.java) expects, but an empty instance of [ArrayBasedContext](https://github.com/open-telemetry/opentelemetry-java/blob/main/api/context/src/main/java/io/opentelemetry/context/ArrayBasedContext.java).
-
