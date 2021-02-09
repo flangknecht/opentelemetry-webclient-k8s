@@ -4,7 +4,8 @@ Using 2 Spring Boot WebMVC - webservices, I experienced that some spans generate
 In this setup service 1 makes an HTTP request to service 2 using Spring's WebClient.
 
 So far, I could only reproduce this issue when the applications were deployed to kubernetes.
-I've tried it on 3 different kubernetes instances.
+I've tried it on 3 different kubernetes distributions as well as in a docker-compose setup.
+
 - k3s:
   - kernel: `Linux debtest 5.4.0-65-generic #73-Ubuntu SMP Mon Jan 18 17:25:17 UTC 2021 x86_64 GNU/Linux`
   - k8s server version: `v1.20.0+k3s2 (Server Version: version.Info{Major:"1", Minor:"20", GitVersion:"v1.20.2", GitCommit:"faecb196815e248d3ecfb03c680a4507229c2a56", GitTreeState:"clean", BuildDate:"2021-01-13T13:20:00Z", GoVersion:"go1.15.5", Compiler:"gc", Platform:"linux/amd64"})`
@@ -29,9 +30,9 @@ Oddly enough, a docker-compose setup didn't show this issue.
 
 1. Deploy to Kubernetes
 2. Call web service 1 (HTTP GET /)
-  - Check jaeger-ui for traces and see broken trace
+  - Check jaeger-ui for traces for service 1 and see broken trace
 3. Make another call to web service 1 within a short period of time
-  - Check jaeger-ui again, see new trace with 5 spans instead of the three spans seen before
+  - Check jaeger-ui again, see new (correct) trace with 5 spans instead of the three spans seen before
 
 Netty seems to also create a new channel every 100 requests. Broken traces can then also be encountered.
 
