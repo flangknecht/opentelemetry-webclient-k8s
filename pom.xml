@@ -14,7 +14,7 @@
     <artifactId>otel-services</artifactId>
     <name>otel-services</name>
     <description>Evaluation project to showcase broken traces on kubernetes</description>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -100,7 +100,15 @@
                                                     <destName>javaagent-15.jar</destName>
                                                     <fileMode>0555</fileMode>
                                                 </file>
-                                                <file>
+                                                 <file>
+                                                    <source>
+                                                        ${maven.multiModuleProjectDirectory}/opentelemetry-javaagent-0.16.0-20210209.034643-7.jar
+                                                    </source>
+                                                    <outputDirectory>srv</outputDirectory>
+                                                    <destName>javaagent-16-snapshot.jar</destName>
+                                                    <fileMode>0555</fileMode>
+                                                </file>
+                                               <file>
                                                     <source>${project.build.directory}/${project.build.finalName}.jar</source>
                                                     <outputDirectory>srv</outputDirectory>
                                                     <destName>app</destName>
@@ -119,7 +127,7 @@
                                             <arg>-Djava.io.tmpdir=/tmp</arg>
                                             <arg>-Dnetworkaddress.cache.ttl=120</arg>
                                             <arg>-XX:+UseContainerSupport</arg>
-                                            <arg>-javaagent:/srv/javaagent-15.jar</arg>
+                                            <arg>-javaagent:/srv/javaagent-16-snapshot.jar</arg>
                                             <arg>-jar</arg>
                                             <arg>/srv/app</arg>
                                         </exec>
