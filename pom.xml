@@ -14,7 +14,7 @@
     <artifactId>otel-services</artifactId>
     <name>otel-services</name>
     <description>Evaluation project to showcase broken traces on kubernetes</description>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -102,10 +102,10 @@
                                                 </file>
                                                  <file>
                                                     <source>
-                                                        ${maven.multiModuleProjectDirectory}/opentelemetry-javaagent-0.16.0-20210209.034643-7.jar
+                                                        ${maven.multiModuleProjectDirectory}/opentelemetry-javaagent-all-0.16.0.jar
                                                     </source>
                                                     <outputDirectory>srv</outputDirectory>
-                                                    <destName>javaagent-16-snapshot.jar</destName>
+                                                    <destName>javaagent-16.jar</destName>
                                                     <fileMode>0555</fileMode>
                                                 </file>
                                                <file>
@@ -125,9 +125,8 @@
                                             <arg>-Djava.awt.headless=true</arg>
                                             <arg>-Djava.security.egd=file:/dev/./urandom</arg>
                                             <arg>-Djava.io.tmpdir=/tmp</arg>
-                                            <arg>-Dnetworkaddress.cache.ttl=120</arg>
                                             <arg>-XX:+UseContainerSupport</arg>
-                                            <arg>-javaagent:/srv/javaagent-16-snapshot.jar</arg>
+                                            <arg>-javaagent:/srv/javaagent-16.jar</arg>
                                             <arg>-jar</arg>
                                             <arg>/srv/app</arg>
                                         </exec>

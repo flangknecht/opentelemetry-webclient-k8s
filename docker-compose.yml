@@ -16,7 +16,7 @@ services:
       SERVICE_TWO_URI: http://opentelemetry-service-two:8080
       OTEL_METRICS_EXPORTER: none
       OTEL_RESOURCE_ATTRIBUTES: service.namespace=myteam,service.name=opentelemetry-service-one,service.version=latest,service.instance.id=p1
-      OTEL_TRACE_EXPORTER: jaeger
+      OTEL_TRACES_EXPORTER: jaeger
       OTEL_PROPAGATORS: b3multi
       OTEL_EXPORTER_JAEGER_ENDPOINT: "jaeger:14250"
 
@@ -27,7 +27,7 @@ services:
     links:
       - jaeger:jaeger
     environment:
-      OTEL_TRACE_EXPORTER: jaeger
+      OTEL_TRACES_EXPORTER: jaeger
       OTEL_PROPAGATORS: b3multi
       OTEL_EXPORTER_JAEGER_ENDPOINT: "jaeger:14250"
       OTEL_RESOURCE_ATTRIBUTES: service.namespace=myteam,service.name=opentelemetry-service-two,service.version=latest,service.instance.id=p3
