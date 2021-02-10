@@ -31,11 +31,11 @@ spec:
               value: none
             - name: OTEL_RESOURCE_ATTRIBUTES
               value: service.namespace=myteam,service.name=opentelemetry-service-two,service.version=latest,service.instance.id=p3
-            - name: OTEL_TRACE_EXPORTER
+            - name: OTEL_TRACES_EXPORTER
               value: jaeger
             - name: OTEL_PROPAGATORS
               value: b3multi
-          image: flangknecht/opentelemetry-service-two:1.0.1
+          image: flangknecht/opentelemetry-service-two:1.0.2
           name: opentelemetry-service-two
           resources: {}
       hostname: opentelemetry-service-two

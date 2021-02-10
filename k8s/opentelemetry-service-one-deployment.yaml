@@ -33,13 +33,13 @@ spec:
               value: none
             - name: OTEL_RESOURCE_ATTRIBUTES
               value: service.namespace=myteam,service.name=opentelemetry-service-one,service.version=latest,service.instance.id=p1
-            - name: OTEL_TRACE_EXPORTER
+            - name: OTEL_TRACES_EXPORTER
               value: jaeger
             - name: OTEL_PROPAGATORS
               value: b3multi
             - name: SERVICE_TWO_URI
               value: http://opentelemetry-service-two:8080
-          image: flangknecht/opentelemetry-service-one:1.0.1
+          image: flangknecht/opentelemetry-service-one:1.0.2
           name: opentelemetry-service-one
           ports:
             - containerPort: 8080
